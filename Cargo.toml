@@ -1,0 +1,8 @@
+[package]
+name = "tinygrib2"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+thiserror = "2.0.12"
+byteorder = "1.5.0"

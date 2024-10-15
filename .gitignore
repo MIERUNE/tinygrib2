@@ -1,0 +1,8 @@
+.DS_Store
+
+/target
+/output
+
+*.bin
+*.grib2
+*.scoa
