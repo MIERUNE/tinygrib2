@@ -6,12 +6,14 @@ use crate::templates::data_representation::DataRepresentationTemplate5_200;
 use crate::{DataRepresentationSectionHeader, Error, Result};
 
 /// Template 7.200 (Run length packing with level values)
+///
+/// NAN is represented as i32::MIN
 pub fn read_data_7_200<R: Read>(
     reader: &mut R,
     size: usize,
     drs: &DataRepresentationSectionHeader,
     drs_template: &DataRepresentationTemplate5_200,
-) -> Result<Vec<Option<i32>>> {
+) -> Result<Vec<i32>> {
     if drs_template.number_of_bits != 8 {
         return Err(Error::UnsupportedData(format!(
             "Only supports 8 bits in our 7.200 implementation, but got {}",
@@ -19,7 +21,7 @@ pub fn read_data_7_200<R: Read>(
         )));
     }
 
-    let mut values: Vec<Option<i32>> = Vec::with_capacity(drs.number_of_values as usize);
+    let mut values: Vec<i32> = Vec::with_capacity(drs.number_of_values as usize);
 
     let mut lv = reader.read_u8()?;
     let mut p = 0;
@@ -39,8 +41,8 @@ pub fn read_data_7_200<R: Read>(
             }
         }
         let value = match lv {
-            0 => None,
-            _ => Some(drs_template.mvl_scaled_representative_values[(lv - 1) as usize] as i32),
+            0 => i32::MIN,
+            _ => drs_template.mvl_scaled_representative_values[(lv - 1) as usize] as i32,
         };
         for _ in 0..run_length {
             values.push(value);
