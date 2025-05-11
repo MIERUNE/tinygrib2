@@ -2,10 +2,8 @@ pub mod message;
 pub mod reader;
 pub mod templates;
 
-use thiserror::Error;
-
-use message::*;
 pub use reader::*;
+use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum Error {
